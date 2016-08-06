@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer;
 
 import com.pedrosantos.conversationdisplayer.models.CDDataSet;
-import com.pedrosantos.conversationdisplayer.models.CDNetworkError;
+import com.pedrosantos.conversationdisplayer.models.CDError;
 import com.pedrosantos.conversationdisplayer.promises.CDPromise;
 import com.pedrosantos.conversationdisplayer.promises.DataSetPromises;
 
@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
                         resultLabel.setText("Success. " + result.getUserList().size() + " users and " + result.getMessageList().size() + " messages");
                     }
                 })
-                .fail(new FailCallback<CDNetworkError>() {
+                .fail(new FailCallback<CDError>() {
                     @Override
-                    public void onFail(final CDNetworkError error) {
+                    public void onFail(final CDError error) {
                         resultLabel.setText("Fail. Error code: " + error.getCode() + " | Message: " + error.getMessage());
                     }
                 });

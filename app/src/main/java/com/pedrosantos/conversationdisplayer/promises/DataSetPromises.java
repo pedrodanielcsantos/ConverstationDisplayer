@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer.promises;
 
 import com.pedrosantos.conversationdisplayer.models.CDDataSet;
-import com.pedrosantos.conversationdisplayer.models.CDNetworkError;
+import com.pedrosantos.conversationdisplayer.models.CDError;
 import com.pedrosantos.conversationdisplayer.network.clients.CDNetworkClient;
 
 import org.jdeferred.Promise;
@@ -14,10 +14,10 @@ import retrofit2.Response;
 /**
  * Static class that holds the promises to invoke the methods in the DataSetAPI.
  */
-public class DataSetPromises extends BaseAPIPromise {
+public class DataSetPromises extends BasePromise {
 
-    public static Promise<CDDataSet, CDNetworkError, Void> getDataSet() {
-        final DeferredObject<CDDataSet, CDNetworkError, Void> deferredObject = new DeferredObject<>();
+    public static Promise<CDDataSet, CDError, Void> getDataSet() {
+        final DeferredObject<CDDataSet, CDError, Void> deferredObject = new DeferredObject<>();
 
         CDNetworkClient.getInstance().getConversationAPI().getData().enqueue(new Callback<CDDataSet>() {
             @Override

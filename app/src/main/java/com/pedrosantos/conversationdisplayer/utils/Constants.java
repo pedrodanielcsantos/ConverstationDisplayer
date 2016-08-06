@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer.utils;
 
 /**
- * Created by Asus on 06/08/2016.
+ * General class to hold common constant values.
  */
 public class Constants {
 

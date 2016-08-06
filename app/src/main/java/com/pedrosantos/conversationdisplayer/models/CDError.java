@@ -3,11 +3,11 @@ package com.pedrosantos.conversationdisplayer.models;
 /**
  * Helper model, to map a network error, when performing api requests.
  */
-public class CDNetworkError {
+public class CDError {
     private final int mCode;
     private final String mMessage;
 
-    public CDNetworkError(final int code, final String message) {
+    public CDError(final int code, final String message) {
         mCode = code;
         mMessage = message;
     }
