@@ -1,7 +1,16 @@
 package com.pedrosantos.conversationdisplayer;
 
-import android.support.v7.app.AppCompatActivity;
+import com.pedrosantos.conversationdisplayer.models.CDDataSet;
+import com.pedrosantos.conversationdisplayer.models.CDNetworkError;
+import com.pedrosantos.conversationdisplayer.promises.CDPromise;
+import com.pedrosantos.conversationdisplayer.promises.DataSetPromises;
+
+import org.jdeferred.DoneCallback;
+import org.jdeferred.FailCallback;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -9,5 +18,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final TextView resultLabel = (TextView) findViewById(R.id.dummy_text_view);
+
+        // WIP - just testing code for now.
+        CDPromise.when(DataSetPromises.getDataSet())
+                .done(new DoneCallback<CDDataSet>() {
+                    @Override
+                    public void onDone(final CDDataSet result) {
+                        resultLabel.setText("Success. " + result.getUserList().size() + " users and " + result.getMessageList().size() + " messages");
+                    }
+                })
+                .fail(new FailCallback<CDNetworkError>() {
+                    @Override
+                    public void onFail(final CDNetworkError error) {
+                        resultLabel.setText("Fail. Error code: " + error.getCode() + " | Message: " + error.getMessage());
+                    }
+                });
     }
 }
