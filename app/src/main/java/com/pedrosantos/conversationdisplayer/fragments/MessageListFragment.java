@@ -16,12 +16,17 @@ import android.widget.TextView;
  */
 public class MessageListFragment extends BaseFragment<MessagesListDataSource> implements MessagesListUICallback {
 
+    public static final String TAG = "MessageListFragment";
     private TextView mDummyTextView;
+
+    public static MessageListFragment newInstance() {
+        return new MessageListFragment();
+    }
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_messages_list, container, true);
+        return inflater.inflate(R.layout.fragment_messages_list, container, false);
     }
 
     @Override
