@@ -1,6 +1,7 @@
 package com.pedrosantos.conversationdisplayer.fragments;
 
 import com.pedrosantos.conversationdisplayer.R;
+import com.pedrosantos.conversationdisplayer.activities.ActivityCallback;
 import com.pedrosantos.conversationdisplayer.datasources.BaseDataSource;
 import com.pedrosantos.conversationdisplayer.fragments.callbacks.BaseUICallback;
 import com.pedrosantos.conversationdisplayer.models.CDError;
@@ -38,6 +39,13 @@ public abstract class BaseFragment<DS extends BaseDataSource> extends Fragment i
         super.onDestroy();
         mDataSource.detachUICallback();
         mDataSource = null;
+    }
+
+    public ActivityCallback getActivityCallback() {
+        if (getActivity() != null) {
+            return ((ActivityCallback) getActivity());
+        }
+        return null;
     }
 
     @Override

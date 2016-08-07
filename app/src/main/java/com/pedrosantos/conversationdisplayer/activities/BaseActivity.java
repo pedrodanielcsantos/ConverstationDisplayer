@@ -9,11 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 /**
  *
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements ActivityCallback {
 
-    /**
-     * Adds a fragment to the current
-     */
+    @Override
     public void addFragment(final Fragment fragment, final String tag) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null) {
@@ -27,13 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Method that replaces the current fragment for a new one.
-     *
-     * @param fragment       new fragment
-     * @param tag            tag of new fragment
-     * @param clearBackStack if the back stack should be cleared or not.
-     */
+    @Override
     public void replaceFragment(final Fragment fragment, final String tag, final boolean clearBackStack) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null) {
