@@ -1,9 +1,14 @@
 package com.pedrosantos.conversationdisplayer.fragments;
 
+import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.datasources.BaseDataSource;
+import com.pedrosantos.conversationdisplayer.fragments.callbacks.BaseUICallback;
+import com.pedrosantos.conversationdisplayer.models.CDError;
+import com.pedrosantos.conversationdisplayer.utils.Constants;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 import java.lang.reflect.ParameterizedType;
@@ -28,4 +33,21 @@ public abstract class BaseFragment<DS extends BaseDataSource> extends Fragment i
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDataSource.detachUICallback();
+        mDataSource = null;
+    }
+
+    @Override
+    public void onNetworkError(final CDError error) {
+        if (error != null && getView() != null) {
+            if (error.getCode() == Constants.NETWORK_ERROR) {
+                Snackbar.make(getView(), getString(R.string.check_your_internet_connection), Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(getView(), getString(R.string.we_had_a_problem_please_try_again, error.getCode(), error.getMessage()), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
 }

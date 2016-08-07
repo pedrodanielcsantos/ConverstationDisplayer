@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ConversationDisplayer</string>
+    <string name="check_your_internet_connection">Please check your internet connection</string>
+    <string name="we_had_a_problem_please_try_again" formatted="false">We\'ve had a problem with code %d and message %s. Please try again.</string>
 </resources>

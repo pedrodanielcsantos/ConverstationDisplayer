@@ -2,6 +2,7 @@ package com.pedrosantos.conversationdisplayer.fragments;
 
 import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.datasources.MessagesListDataSource;
+import com.pedrosantos.conversationdisplayer.fragments.callbacks.MessagesListUICallback;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

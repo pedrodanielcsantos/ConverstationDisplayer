@@ -22,7 +22,7 @@ public class BasePromise {
     }
 
     protected static <Result, Progress> void handleOnFailure(final DeferredObject<Result, CDError, Progress> deferredObject, final Throwable t) {
-        deferredObject.reject(new CDError(Constants.INVALID, t.getMessage()));
+        deferredObject.reject(new CDError(Constants.NETWORK_ERROR, t.getMessage()));
     }
 
 }

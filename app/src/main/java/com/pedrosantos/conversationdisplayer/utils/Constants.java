@@ -6,4 +6,5 @@ package com.pedrosantos.conversationdisplayer.utils;
 public class Constants {
 
     public static final int INVALID = -1;
+    public static final int NETWORK_ERROR = 0;
 }

@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.fragments;
+package com.pedrosantos.conversationdisplayer.fragments.callbacks;
 
 /**
  * Created by Asus on 07/08/2016.
