@@ -15,7 +15,9 @@
         <EditText
             android:id="@+id/splash_username_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:lines="1"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -23,6 +25,6 @@
         android:id="@+id/splash_submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
-        android:layout_below="@+id/splash_username_input_layout"/>
+        android:layout_below="@+id/splash_username_input_layout"
+        android:text="@string/submit"/>
 </RelativeLayout>
