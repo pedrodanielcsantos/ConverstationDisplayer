@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- *
+ * Abstract class that serves as base for all application's activities.
+ * It implements ActivityCallback and has common methods for all activities.
  */
 public abstract class BaseActivity extends AppCompatActivity implements ActivityCallback {
 
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
         }
     }
 
+    //If we're pressing back button when the last fragment is visible, it ends the activity.
     @Override
     public void onBackPressed() {
         if (!getSupportFragmentManager().popBackStackImmediate()) {

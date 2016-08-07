@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- *
+ * Fragment that displays a list of messages that compose the conversation.
  */
 public class MessageListFragment extends BaseFragment<MessagesListDataSource> implements MessagesListUICallback {
 

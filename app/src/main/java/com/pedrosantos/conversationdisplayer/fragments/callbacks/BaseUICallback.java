@@ -3,7 +3,9 @@ package com.pedrosantos.conversationdisplayer.fragments.callbacks;
 import com.pedrosantos.conversationdisplayer.models.CDError;
 
 /**
- * Created by Asus on 07/08/2016.
+ * Base callback for all datasources to call when they need to communicate with the UI.
+ * It has the methods common to all datasources.
+ * Needed methods for each specific screen/datasource should be declared in each callback declaration.
  */
 public interface BaseUICallback {
 
