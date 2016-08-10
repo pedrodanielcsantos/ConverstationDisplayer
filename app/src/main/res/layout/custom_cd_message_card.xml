@@ -32,7 +32,7 @@
                     android:id="@+id/cd_message_card_avatar"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:background="@mipmap/ic_launcher"/>
+                    android:layout_margin="8dp"/>
 
                 <TextView
                     android:id="@+id/cd_message_card_author"

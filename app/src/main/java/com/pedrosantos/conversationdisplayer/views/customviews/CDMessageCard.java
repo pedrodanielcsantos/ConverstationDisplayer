@@ -1,5 +1,6 @@
 package com.pedrosantos.conversationdisplayer.views.customviews;
 
+import com.bumptech.glide.Glide;
 import com.pedrosantos.conversationdisplayer.R;
 
 import android.content.Context;
@@ -61,6 +62,13 @@ public class CDMessageCard extends LinearLayout {
      */
     public void setAvatarImage(String imageUrl) {
         //Load with glide
+        Glide.with(getContext())
+                .load(imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.image_placeholder)
+                .crossFade()
+                .animate(android.R.anim.fade_in)
+                .into(mAvatarImageView);
     }
 
     /**
