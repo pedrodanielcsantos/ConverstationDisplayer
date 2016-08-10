@@ -1,6 +1,5 @@
 package com.pedrosantos.conversationdisplayer.datasources;
 
-import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 import com.pedrosantos.conversationdisplayer.models.api.Message;
 import com.pedrosantos.conversationdisplayer.models.api.User;
@@ -8,6 +7,7 @@ import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
 import com.pedrosantos.conversationdisplayer.promises.CDPromise;
 import com.pedrosantos.conversationdisplayer.promises.DataSetPromises;
+import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
@@ -25,7 +25,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     /**
      * Loads a list of messages for a given conversation.
      */
-    public void loadMessagesList(){
+    public void loadMessagesList() {
         CDPromise.when(DataSetPromises.getDataSet())
                 .done(new DoneCallback<CDDataSet>() {
                     @Override
@@ -41,6 +41,9 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                     public void onFail(final CDError error) {
                         //fetch results from database
                         onNetworkError(error);
+                        if (mUICallback != null) {
+                            mUICallback.onDataSetLoaded(null);
+                        }
                     }
                 });
     }
