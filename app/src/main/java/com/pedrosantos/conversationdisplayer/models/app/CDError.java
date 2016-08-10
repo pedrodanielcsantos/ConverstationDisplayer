@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.models;
+package com.pedrosantos.conversationdisplayer.models.app;
 
 /**
  * Helper model, to map a network error, when performing api requests.

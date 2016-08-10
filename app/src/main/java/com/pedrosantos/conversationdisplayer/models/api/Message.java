@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.models;
+package com.pedrosantos.conversationdisplayer.models.api;
 
 import com.google.gson.annotations.SerializedName;
 
