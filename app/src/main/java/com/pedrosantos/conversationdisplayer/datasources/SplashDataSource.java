@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.datasources;
 
-import com.pedrosantos.conversationdisplayer.fragments.callbacks.BaseUICallback;
+import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.BaseUICallback;
 
 import android.text.Editable;
 import android.text.TextUtils;

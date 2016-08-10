@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.fragments;
+package com.pedrosantos.conversationdisplayer.views.fragments;
 
 import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.datasources.SplashDataSource;

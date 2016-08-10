@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.customviews;
+package com.pedrosantos.conversationdisplayer.views.customviews;
 
 import com.pedrosantos.conversationdisplayer.R;
 

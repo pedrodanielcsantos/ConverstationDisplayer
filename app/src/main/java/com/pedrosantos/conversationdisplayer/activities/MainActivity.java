@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer.activities;
 
 import com.pedrosantos.conversationdisplayer.R;
-import com.pedrosantos.conversationdisplayer.fragments.SplashFragment;
+import com.pedrosantos.conversationdisplayer.views.fragments.SplashFragment;
 
 import android.os.Bundle;
 

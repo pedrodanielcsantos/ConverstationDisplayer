@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.datasources;
 
-import com.pedrosantos.conversationdisplayer.fragments.callbacks.MessagesListUICallback;
+import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 import com.pedrosantos.conversationdisplayer.models.api.Message;
 import com.pedrosantos.conversationdisplayer.models.api.User;

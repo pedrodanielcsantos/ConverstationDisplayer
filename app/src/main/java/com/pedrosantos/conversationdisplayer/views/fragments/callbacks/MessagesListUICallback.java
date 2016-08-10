@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer.fragments.callbacks;
+package com.pedrosantos.conversationdisplayer.views.fragments.callbacks;
 
 import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 
