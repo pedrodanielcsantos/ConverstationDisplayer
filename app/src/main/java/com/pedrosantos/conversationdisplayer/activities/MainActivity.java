@@ -11,7 +11,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //When the activity (re) starts, the first fragment visible is the SplashFragment.
-        replaceFragment(SplashFragment.newInstance(), SplashFragment.TAG, true);
+        //When the activity starts, the first fragment visible is the SplashFragment.
+        //Otherwise let it recover.
+        if (savedInstanceState == null) {
+            replaceFragment(SplashFragment.newInstance(), SplashFragment.TAG, true);
+        }
     }
 }
