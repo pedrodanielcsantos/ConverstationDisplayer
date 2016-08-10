@@ -1,4 +1,4 @@
-package com.pedrosantos.conversationdisplayer;
+package com.pedrosantos.conversationdisplayer.views.adapters;
 
 import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCard;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;

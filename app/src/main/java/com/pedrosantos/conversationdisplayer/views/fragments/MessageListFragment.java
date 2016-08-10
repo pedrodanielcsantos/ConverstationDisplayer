@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.views.fragments;
 
-import com.pedrosantos.conversationdisplayer.MessageListAdapter;
+import com.pedrosantos.conversationdisplayer.views.adapters.MessageListAdapter;
 import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.datasources.MessagesListDataSource;
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
