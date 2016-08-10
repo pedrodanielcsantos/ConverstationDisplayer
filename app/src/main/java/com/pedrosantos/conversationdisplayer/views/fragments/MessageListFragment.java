@@ -65,7 +65,14 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
     public void onDataSetLoaded(final CDDataSet dataSet) {
         if (dataSet != null) {
             List<MessageListItem> messageListItems = mDataSource.createMessageListItems(dataSet, getSelfUsername());
-            mAdapter = new MessageListAdapter(messageListItems);
+            //When it's the first data loading process finishes
+            if (mAdapter == null) {
+                mAdapter = new MessageListAdapter(messageListItems);
+            } else {
+                //When it's a refresh
+                mAdapter.setItems(messageListItems);
+                mAdapter.notifyDataSetChanged();
+            }
 
             mMessagesRecyclerView.setAdapter(mAdapter);
         }

@@ -48,15 +48,21 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                 });
     }
 
+    /**
+     * Creates a list of MessageListItems based on the dataset passed as parameter, identifying
+     * messages that are from the current user (identified by selfUsername parameter).
+     */
     public List<MessageListItem> createMessageListItems(final CDDataSet dataSet, final String selfUsername) {
         Map<Long, User> userMap = new HashMap<>();
 
+        //Create map with users info, indexed by userId
         for (final User user : dataSet.getUserList()) {
             userMap.put(user.getId(), user);
         }
 
         List<MessageListItem> messageListItems = new ArrayList<>();
 
+        //Create list of MessageListItems, joining user and message info.
         for (final Message message : dataSet.getMessageList()) {
             final MessageListItem item = new MessageListItem();
             final User author = userMap.get(message.getUserId());
