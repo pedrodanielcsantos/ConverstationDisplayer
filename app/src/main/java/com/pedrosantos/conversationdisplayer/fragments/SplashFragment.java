@@ -62,7 +62,7 @@ public class SplashFragment extends BaseFragment<SplashDataSource> {
             public void onClick(final View view) {
                 if (mDataSource.isUsernameValid(usernameInputField.getText())) {
                     if (getActivityCallback() != null) {
-                        getActivityCallback().replaceFragment(MessageListFragment.newInstance(), MessageListFragment.TAG, true);
+                        getActivityCallback().replaceFragment(MessageListFragment.newInstance(usernameInputField.getText().toString()), MessageListFragment.TAG, true);
                     }
                 } else {
                     usernameInputFieldLayout.setError(getString(R.string.please_add_valid, getString(R.string.username)));

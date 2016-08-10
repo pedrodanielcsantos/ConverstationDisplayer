@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.network.services;
 
-import com.pedrosantos.conversationdisplayer.models.CDDataSet;
+import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

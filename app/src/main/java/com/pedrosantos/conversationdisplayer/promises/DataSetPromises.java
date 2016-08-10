@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer.promises;
 
-import com.pedrosantos.conversationdisplayer.models.CDDataSet;
-import com.pedrosantos.conversationdisplayer.models.CDError;
+import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
+import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.network.clients.CDNetworkClient;
 
 import org.jdeferred.Promise;

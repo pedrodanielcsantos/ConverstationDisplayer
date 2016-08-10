@@ -4,7 +4,7 @@ import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.activities.ActivityCallback;
 import com.pedrosantos.conversationdisplayer.datasources.BaseDataSource;
 import com.pedrosantos.conversationdisplayer.fragments.callbacks.BaseUICallback;
-import com.pedrosantos.conversationdisplayer.models.CDError;
+import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.utils.Constants;
 
 import android.os.Bundle;

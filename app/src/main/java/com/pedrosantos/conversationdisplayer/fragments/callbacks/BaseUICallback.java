@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.fragments.callbacks;
 
-import com.pedrosantos.conversationdisplayer.models.CDError;
+import com.pedrosantos.conversationdisplayer.models.app.CDError;
 
 /**
  * Base callback for all datasources to call when they need to communicate with the UI.

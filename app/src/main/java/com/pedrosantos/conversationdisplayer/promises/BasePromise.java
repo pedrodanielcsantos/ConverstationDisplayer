@@ -1,6 +1,6 @@
 package com.pedrosantos.conversationdisplayer.promises;
 
-import com.pedrosantos.conversationdisplayer.models.CDError;
+import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.utils.Constants;
 
 import org.jdeferred.impl.DeferredObject;
