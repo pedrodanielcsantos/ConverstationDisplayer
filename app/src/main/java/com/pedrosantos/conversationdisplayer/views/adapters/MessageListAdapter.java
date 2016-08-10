@@ -1,7 +1,7 @@
 package com.pedrosantos.conversationdisplayer.views.adapters;
 
-import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCard;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
+import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCard;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -55,7 +55,4 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return (mItemList != null ? mItemList.size() : 0);
     }
 
-    public void setItems(final List<MessageListItem> items) {
-        mItemList = items;
-    }
 }
