@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@id/cd_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            app:title="@string/app_name"
+            app:titleTextColor="@android:color/white">
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/messages_list_swipe_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,33 +31,8 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <RelativeLayout
-        android:id="@+id/full_screen_progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/half_transparent"
-        android:gravity="center">
+    </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/full_screen_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:visibility="visible"/>
-
-        <TextView
-            android:id="@+id/full_screen_progress_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/full_screen_progress_bar"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="16dp"
-            android:text="@string/loading_conversation"/>
-
-    </RelativeLayout>
+    <include layout="@layout/custom_full_screen_progress"/>
 
 </FrameLayout>

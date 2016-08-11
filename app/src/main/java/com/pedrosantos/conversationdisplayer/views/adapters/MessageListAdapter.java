@@ -55,6 +55,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return (mItemList != null ? mItemList.size() : 0);
     }
 
+    public List<MessageListItem> getItems() {
+        return mItemList;
+    }
+
     /**
      * Sets a new list of items for this adapter.
      */

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +31,13 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MessageListAdapter mAdapter;
 
+
     public static MessageListFragment newInstance(final String selfUsername) {
         Bundle arguments = new Bundle();
         MessageListFragment fragment = new MessageListFragment();
         arguments.putString(SELF_USERNAME_KEY, selfUsername);
         fragment.setArguments(arguments);
         return fragment;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_messages_list, container, false);
     }
 
     @Override
@@ -52,7 +48,35 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messages_list_swipe_to_refresh);
         mMessagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        if (mToolbar != null) {
+            //inflate the menu
+            mToolbar.inflateMenu(R.menu.menu_messages_list);
+
+            final SearchView messagesListToolbarSearch = ((SearchView) mToolbar.getMenu().findItem(R.id.action_search).getActionView());
+            if (messagesListToolbarSearch != null) {
+                messagesListToolbarSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(final String query) {
+                        //Invoke data source's method
+                        mDataSource.searchInMessages(mAdapter.getItems(), query);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(final String newText) {
+                        //Nothing to do here
+                        return false;
+                    }
+                });
+            }
+        }
         mSwipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_messages_list, container, false);
     }
 
     @Override

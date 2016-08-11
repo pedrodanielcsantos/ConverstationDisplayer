@@ -12,15 +12,26 @@ import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesL
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DataSource for the MessagesListFragment.
  */
 public class MessagesListDataSource extends BaseDataSource<MessagesListUICallback> {
+
+    private static final String YYYY_MM_DD = "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}";//yyyy-mm-dd
+    private static final String REGEX_BEFORE = "before:" + YYYY_MM_DD;
+    private static final String REGEX_AFTER = "after:" + YYYY_MM_DD;
+    private static final String REGEX_FROM = "from:([^\\s]+)";
+
 
     /**
      * Loads a list of messages for a given conversation.
@@ -78,5 +89,46 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         }
 
         return messageListItems;
+    }
+
+
+    public void searchInMessages(final List<MessageListItem> items, final String query) {
+        int beforeOccurrences = countOccurrences(query, REGEX_BEFORE);
+        int afterOccurrences = countOccurrences(query, REGEX_AFTER);
+        int fromOccurrences = countOccurrences(query, REGEX_FROM);
+
+        Log.d("MessagesListDataSource", "Occurrences of before: " + beforeOccurrences);
+        Log.d("MessagesListDataSource", "Occurrences of after: " + afterOccurrences);
+        Log.d("MessagesListDataSource", "Occurrences of from: " + fromOccurrences);
+
+        parseDateBefore(items, query);
+        parseDateAfter(items, query);
+        parseFreeText(items, query);
+//        parseFromUser(items, query);
+    }
+
+    /**
+     * Counts the number of occurrences of regex on query
+     */
+    private int countOccurrences(final String query, final String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(query);
+        int occurrencesFound = 0;
+        while (matcher.find()) {
+            occurrencesFound++;
+        }
+
+        return occurrencesFound;
+    }
+
+    private void parseFreeText(final List<MessageListItem> items, final String query) {
+    }
+
+    private void parseDateAfter(final List<MessageListItem> items, final String query) {
+
+    }
+
+    private void parseDateBefore(final List<MessageListItem> items, final String query) {
+
     }
 }

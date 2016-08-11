@@ -2,5 +2,9 @@
 <resources>
 
     <item name="fragments_container" type="id"/>
+    <item name="full_screen_progress" type="id"/>
+    <item name="full_screen_progress_bar" type="id"/>
+    <item name="full_screen_progress_label" type="id"/>
+    <item name="cd_toolbar" type="id"/>
 
 </resources>
