@@ -15,7 +15,6 @@ import org.jdeferred.FailCallback;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +103,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         parseDateBefore(items, query);
         parseDateAfter(items, query);
         parseFreeText(items, query);
-//        parseFromUser(items, query);
+        parseFromUser(items, query);
     }
 
     /**
@@ -120,6 +119,12 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
 
         return occurrencesFound;
     }
+
+    private void parseFromUser(final List<MessageListItem> items, final String query) {
+
+    }
+
+
 
     private void parseFreeText(final List<MessageListItem> items, final String query) {
     }
