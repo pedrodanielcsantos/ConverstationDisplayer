@@ -70,4 +70,9 @@ public abstract class BaseFragment<DS extends BaseDataSource> extends Fragment i
             }
         }
     }
+
+    @Override
+    public String getTranslatedString(final int stringResourceId) {
+        return getString(stringResourceId);
+    }
 }

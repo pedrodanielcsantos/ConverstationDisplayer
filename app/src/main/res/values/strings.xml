@@ -8,4 +8,9 @@
     <string name="please_add_valid" formatted="false">Please add a valid %s</string>
     <string name="loading_conversation">Loading conversation...</string>
     <string name="search">Search here...</string>
+
+    <!--Filter mechanism tags-->
+    <string name="before">before</string>
+    <string name="from">from</string>
+    <string name="after">after</string>
 </resources>

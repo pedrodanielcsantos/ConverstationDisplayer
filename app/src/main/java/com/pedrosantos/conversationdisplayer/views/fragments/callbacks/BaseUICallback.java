@@ -10,4 +10,6 @@ import com.pedrosantos.conversationdisplayer.models.app.CDError;
 public interface BaseUICallback {
 
     void onNetworkError(CDError error);
+
+    String getTranslatedString(int stringResourceId);
 }
