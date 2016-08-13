@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:background="@color/primary"
             app:title="@string/app_name"
+            android:elevation="@dimen/cardview_default_elevation"
             app:titleTextColor="@android:color/white">
 
         </android.support.v7.widget.Toolbar>

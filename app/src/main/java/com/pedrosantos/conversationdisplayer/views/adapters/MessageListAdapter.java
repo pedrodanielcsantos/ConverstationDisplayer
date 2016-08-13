@@ -1,9 +1,11 @@
 package com.pedrosantos.conversationdisplayer.views.adapters;
 
+import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
 import com.pedrosantos.conversationdisplayer.utils.Constants;
 import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCardView;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -45,11 +47,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public void onBindViewHolder(final MessageListVH holder, final int position) {
         final MessageListItem messageListItem = mItemList.get(position);
 
-        holder.mCard.setContentText(messageListItem.getContent());
+        holder.mCard.setContentText(messageListItem.getContentSpannableString());
         holder.mCard.setFromSelf(messageListItem.isFromSelf());
-        holder.mCard.setAuthorName(messageListItem.getUserName());
+        holder.mCard.setAuthorName(messageListItem.getUserNameSpannableString());
         holder.mCard.setAvatarImage(messageListItem.getUserAvatar());
         holder.mCard.setDate(Constants.CD_DATE_FORMATTER.format(messageListItem.getPostedDate()));
+
     }
 
     @Override

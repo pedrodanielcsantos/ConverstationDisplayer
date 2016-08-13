@@ -2,6 +2,8 @@ package com.pedrosantos.conversationdisplayer.models.app;
 
 import com.google.gson.annotations.SerializedName;
 
+import android.text.SpannableString;
+
 import java.util.Date;
 
 /**
@@ -16,19 +18,19 @@ public class MessageListItem {
     private long mUserId;
 
     @SerializedName("content")
-    private String mContent;
+    private SpannableString mContent;
 
     @SerializedName("isFromSelf")
     private boolean mIsFromSelf;
 
-    @SerializedName("isExpanded")
-    private boolean mIsExpanded;
+    @SerializedName("matchesSearch")
+    private boolean mMatchesSearch;
 
     @SerializedName("userAvatar")
     private String mUserAvatar;
 
     @SerializedName("userName")
-    private String mUserName;
+    private SpannableString mUserName;
 
     @SerializedName("postedDate")
     private Date mPostedDate;
@@ -50,11 +52,15 @@ public class MessageListItem {
     }
 
     public String getContent() {
-        return mContent;
+        return mContent.toString();
     }
 
-    public void setContent(final String content) {
+    public void setContent(final SpannableString content) {
         mContent = content;
+    }
+
+    public SpannableString getContentSpannableString() {
+        return mContent;
     }
 
     public boolean isFromSelf() {
@@ -65,12 +71,12 @@ public class MessageListItem {
         mIsFromSelf = fromSelf;
     }
 
-    public boolean isExpanded() {
-        return mIsExpanded;
+    public boolean isMatchesSearch() {
+        return mMatchesSearch;
     }
 
-    public void setExpanded(final boolean expanded) {
-        mIsExpanded = expanded;
+    public void setMatchesSearch(final boolean matchesSearch) {
+        this.mMatchesSearch = matchesSearch;
     }
 
     public String getUserAvatar() {
@@ -82,11 +88,15 @@ public class MessageListItem {
     }
 
     public String getUserName() {
-        return mUserName;
+        return mUserName.toString();
     }
 
-    public void setUserName(final String userName) {
+    public void setUserName(final SpannableString userName) {
         mUserName = userName;
+    }
+
+    public SpannableString getUserNameSpannableString() {
+        return mUserName;
     }
 
     public Date getPostedDate() {

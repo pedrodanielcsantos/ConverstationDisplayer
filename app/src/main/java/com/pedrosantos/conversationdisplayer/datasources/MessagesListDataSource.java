@@ -8,11 +8,16 @@ import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
 import com.pedrosantos.conversationdisplayer.promises.CDPromise;
 import com.pedrosantos.conversationdisplayer.promises.DataSetPromises;
+import com.pedrosantos.conversationdisplayer.utils.Constants;
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
 
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.Pair;
 
@@ -33,7 +38,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
 
     //Static regexes
     private static final String REGEX_YYYY_MM_DD = "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}";//yyyy-mm-dd
-    private static final String YYYY_MM_DD_FORMAT = "yyyy-mm-dd";
+    private static final String YYYY_MM_DD_FORMAT = "yyyy-MM-dd";
     private static final String REGEX_STRING_WITHOUT_SPACES = "([^\\s]+)";
     //Standard constants
     private static final int MAX_ALLOWED_OCCURRENCES_PER_TAG = 1;
@@ -108,11 +113,11 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             final MessageListItem item = new MessageListItem();
             final User author = userMap.get(message.getUserId());
 
-            item.setContent(message.getContent());
-            item.setExpanded(false);
+            item.setContent(new SpannableString(message.getContent()));
+            item.setMatchesSearch(false);
             item.setFromSelf(selfUsername.equals(author.getName()));
             item.setUserAvatar(author.getAvatarUrl());
-            item.setUserName(author.getName());
+            item.setUserName(new SpannableString(author.getName()));
             item.setMessageId(message.getId());
 
             Date d = new Date(message.getPostedTs() * 1000);
@@ -122,6 +127,18 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         }
 
         return messageListItems;
+    }
+
+    public List<MessageListItem> clearSearchResults(final List<MessageListItem> items) {
+
+        //clear matches from past searches.
+        for (final MessageListItem item : items) {
+            item.setMatchesSearch(false);
+            item.setContent(new SpannableString(item.getContent()));
+            item.setUserName(new SpannableString(item.getUserName()));
+        }
+
+        return items;
     }
 
     /**
@@ -134,7 +151,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
      *
      * All the supported tags are translated to the application's language.
      */
-    public void searchInMessages(List<MessageListItem> items, String query) {
+    public List<MessageListItem> searchInMessages(List<MessageListItem> items, String query) {
         int beforeOccurrences = countOccurrences(query, mBeforeRegex);
         int afterOccurrences = countOccurrences(query, mAfterRegex);
         int fromOccurrences = countOccurrences(query, mFromRegex);
@@ -143,26 +160,58 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                 afterOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG ||
                 fromOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG) {
             //Return the error to the UI
-            return;
+            return null;
         }
 
-        Pair<String, List<MessageListItem>> result = parseDateBefore(items, query);
-        query = result.first;
-        Log.d("MessagesListDataSource", "Query after 'before' parse: " + query + " | Matching items: " + result.second.size());
+        items = clearSearchResults(items);
 
-        result = parseDateAfter(items, query);
-        query = result.first;
-        Log.d("MessagesListDataSource", "Query after 'after' parse: " + query + " | Matching items: " + result.second.size());
+        Pair<String, List<MessageListItem>> result;
+        if (beforeOccurrences > 0) {
+            result = parseDateBefore(items, query);
+            query = result.first;
+            items = result.second;
+        }
 
-        result = parseFromUser(items, query);
-        query = result.first;
-        Log.d("MessagesListDataSource", "Query after 'from' parse: " + query + " | Matching items: " + result.second.size());
+        if (afterOccurrences > 0) {
+            result = parseDateAfter(items, query);
+            query = result.first;
+            items = result.second;
+        }
+
+        if (fromOccurrences > 0) {
+            result = parseFromUser(items, query);
+            query = result.first;
+            items = result.second;
+        }
 
         result = parseFreeText(items, query);
-        query = result.first;
-        Log.d("MessagesListDataSource", "Query after 'free text' parse: " + query + " | Matching items: " + result.second.size());
+
+        items = result.second;
+        int matchCount = 0;
+        for (final MessageListItem item : items) {
+            if (item.isMatchesSearch()) {
+                matchCount++;
+            }
+        }
+
+        Log.d("MessagesListDataSource", "MatchesCount: " + matchCount);
 
         Log.d("MessagesListDataSource", "----------");
+
+        return items;
+    }
+
+    /**
+     * Returns index of first item that is marked as matching a search or Constants.INVALID if none
+     * is found.
+     */
+    public int indexOfFirstMatchedSearch(final List<MessageListItem> matchedItems) {
+        for (int i = 0; i < matchedItems.size(); i++) {
+            if (matchedItems.get(i).isMatchesSearch()) {
+                return i;
+            }
+        }
+        return Constants.INVALID;
     }
 
     private Pair<String, List<MessageListItem>> parseDateBefore(List<MessageListItem> items, String query) {
@@ -182,7 +231,6 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
      * matched this filter.
      */
     private Pair<String, List<MessageListItem>> parseDateTag(List<MessageListItem> items, String query, boolean isBefore) {
-        List<MessageListItem> matchingItems = new ArrayList<>();
         Pattern pattern = Pattern.compile(isBefore ? mBeforeRegex : mAfterRegex);
         Matcher matcher = pattern.matcher(query);
         String dateWithTag;
@@ -207,11 +255,11 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                     if (item.getPostedDate() != null) {
                         if (isBefore) {
                             if (item.getPostedDate().before(queryDate)) {
-                                matchingItems.add(item);
+                                item.setMatchesSearch(true);
                             }
                         } else {
                             if (item.getPostedDate().after(queryDate)) {
-                                matchingItems.add(item);
+                                item.setMatchesSearch(true);
                             }
                         }
                     }
@@ -223,17 +271,13 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             query = query.replace(dateWithTag, "");
         }
 
-        return new Pair<>(query.trim(), matchingItems);
+        return new Pair<>(query.trim(), items);
     }
 
     /**
      * Parses the "from:username" tag - which are the items that are from the user with username (case insensitive) "username".
-     * @param items
-     * @param query
-     * @return
      */
     private Pair<String, List<MessageListItem>> parseFromUser(final List<MessageListItem> items, String query) {
-        List<MessageListItem> matchingItems = new ArrayList<>();
         Pattern pattern = Pattern.compile(mFromRegex);
         Matcher matcher = pattern.matcher(query);
         String fromWithTag;
@@ -247,7 +291,10 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             //Check matching items, depending on type of verification we're doing here - username is equal (ignoring case) to the one passed on the query
             for (final MessageListItem item : items) {
                 if (item.getUserName() != null && item.getUserName().equalsIgnoreCase(fromWithoutTag)) {
-                    matchingItems.add(item);
+                    item.setMatchesSearch(true);
+                    item.setUserName(getSpannableString(item.getUserName(), item.getUserName()));
+                } else {
+                    item.setUserName(new SpannableString(item.getUserName()));
                 }
             }
 
@@ -255,7 +302,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             query = query.replace(fromWithTag, "");
         }
 
-        return new Pair<>(query.trim(), matchingItems);
+        return new Pair<>(query.trim(), items);
     }
 
     /**
@@ -266,15 +313,43 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
      * that query in the second parameter
      */
     private Pair<String, List<MessageListItem>> parseFreeText(final List<MessageListItem> items, final String query) {
-        List<MessageListItem> matchingItems = new ArrayList<>();
-
-        for (final MessageListItem item : items) {
-            if (item.getContent() != null && item.getContent().toLowerCase().contains(query.toLowerCase())) {
-                matchingItems.add(item);
+        if (!TextUtils.isEmpty(query)) {
+            for (final MessageListItem item : items) {
+                if (item.getContent() != null && item.getContent().toLowerCase().contains(query.toLowerCase())) {
+                    item.setMatchesSearch(true);
+                    item.setContent(getSpannableString(item.getContent(), query));
+                } else {
+                    item.setContent(new SpannableString(item.getContent()));
+                }
             }
         }
+        return new Pair<>(query, items);
+    }
 
-        return new Pair<>(query, matchingItems);
+    /**
+     * Helper method to return a spannable string with all occurrences textToSpan in bold inside of
+     * originalText
+     */
+    private SpannableString getSpannableString(final String originalText, final String textToSpan) {
+        // make text bold
+        final StyleSpan boldStyleSpan = new StyleSpan(Typeface.BOLD);
+        SpannableString styledString = new SpannableString(originalText);
+
+        if (!TextUtils.isEmpty(originalText) && !TextUtils.isEmpty(textToSpan)) {
+            //Make texts lower case to make this highlighting case insensitive
+            final String originalTextLowerCase = originalText.toLowerCase();
+            final String textToSpanLowerCase = textToSpan.toLowerCase();
+
+            //find index of first occurrence to start loop
+            int indexOfOccurrence = originalTextLowerCase.indexOf(textToSpanLowerCase);
+
+            while (indexOfOccurrence >= 0) {
+                styledString.setSpan(new StyleSpan(Typeface.BOLD), indexOfOccurrence, indexOfOccurrence + textToSpan.length(), 0);
+                //Look for index of next occurrence by looking on the substring after the current occurrence
+                indexOfOccurrence = originalText.toLowerCase().indexOf(textToSpan.toLowerCase(), indexOfOccurrence + textToSpan.length());
+            }
+        }
+        return styledString;
     }
 
     /**

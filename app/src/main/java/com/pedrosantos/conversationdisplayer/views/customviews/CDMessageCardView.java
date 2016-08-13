@@ -4,6 +4,7 @@ import com.bumptech.glide.Glide;
 import com.pedrosantos.conversationdisplayer.R;
 
 import android.content.Context;
+import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -45,14 +46,14 @@ public class CDMessageCardView extends LinearLayout {
     /**
      * Sets the message content view.
      */
-    public void setContentText(final String contentText) {
+    public void setContentText(final SpannableString contentText) {
         mContentText.setText(contentText);
     }
 
     /**
      * Sets the author's name label.
      */
-    public void setAuthorName(final String authorName) {
+    public void setAuthorName(final SpannableString authorName) {
         mAuthorName.setText(authorName);
     }
 

@@ -4,15 +4,18 @@ import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.datasources.MessagesListDataSource;
 import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
+import com.pedrosantos.conversationdisplayer.utils.Constants;
 import com.pedrosantos.conversationdisplayer.views.adapters.MessageListAdapter;
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,13 +61,30 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
                     @Override
                     public boolean onQueryTextSubmit(final String query) {
                         //Invoke data source's method
-                        mDataSource.searchInMessages(mAdapter.getItems(), query);
+                        List<MessageListItem> matchedItems = mDataSource.searchInMessages(mAdapter.getItems(), query);
+                        if (matchedItems != null) {
+                            mAdapter.setItems(matchedItems);
+                            mAdapter.notifyDataSetChanged();
+                            int indexOfFirstMatch = mDataSource.indexOfFirstMatchedSearch(matchedItems);
+                            if (indexOfFirstMatch != Constants.INVALID) {
+                                mMessagesRecyclerView.smoothScrollToPosition(indexOfFirstMatch);
+                            } else {
+                                Snackbar.make(getView(), getString(R.string.no_results_found), Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Snackbar.make(getView(), getString(R.string.invalid_search_query), Snackbar.LENGTH_SHORT).show();
+                        }
                         return true;
                     }
 
                     @Override
                     public boolean onQueryTextChange(final String newText) {
-                        //Nothing to do here
+                        //If the user cleared the text,clear the search query.
+                        if (TextUtils.isEmpty(newText)) {
+                            mAdapter.setItems(mDataSource.clearSearchResults(mAdapter.getItems()));
+                            mAdapter.notifyDataSetChanged();
+                            return true;
+                        }
                         return false;
                     }
                 });
