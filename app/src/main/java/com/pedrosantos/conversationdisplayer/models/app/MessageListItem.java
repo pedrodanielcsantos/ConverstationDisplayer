@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import android.text.SpannableString;
 
-import java.util.Date;
-
 /**
  * Model to be displayed in each line of the recycler view
  */
@@ -33,7 +31,7 @@ public class MessageListItem {
     private SpannableString mUserName;
 
     @SerializedName("postedDate")
-    private Date mPostedDate;
+    private SpannableString mPostedDate;
 
     public long getMessageId() {
         return mMessageId;
@@ -99,11 +97,15 @@ public class MessageListItem {
         return mUserName;
     }
 
-    public Date getPostedDate() {
+    public SpannableString getPostedDateSpannableString() {
         return mPostedDate;
     }
 
-    public void setPostedDate(final Date postedDate) {
+    public String getPostedDate() {
+        return mPostedDate.toString();
+    }
+
+    public void setPostedDate(final SpannableString postedDate) {
         mPostedDate = postedDate;
     }
 }

@@ -73,7 +73,10 @@ public class CDMessageCardView extends LinearLayout {
                 .into(mAvatarImageView);
     }
 
-    public void setDate(final String date) {
+    /**
+     * Sets the Date label with the value passed as parameter.
+     */
+    public void setDate(final SpannableString date) {
         mDate.setText(date);
     }
 

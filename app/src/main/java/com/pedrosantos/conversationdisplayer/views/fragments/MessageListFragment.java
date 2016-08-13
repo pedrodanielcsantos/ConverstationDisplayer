@@ -65,6 +65,7 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
                         if (matchedItems != null) {
                             mAdapter.setItems(matchedItems);
                             mAdapter.notifyDataSetChanged();
+
                             int indexOfFirstMatch = mDataSource.indexOfFirstMatchedSearch(matchedItems);
                             if (indexOfFirstMatch != Constants.INVALID) {
                                 mMessagesRecyclerView.smoothScrollToPosition(indexOfFirstMatch);

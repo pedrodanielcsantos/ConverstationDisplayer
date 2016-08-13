@@ -121,7 +121,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             item.setMessageId(message.getId());
 
             Date d = new Date(message.getPostedTs() * 1000);
-            item.setPostedDate(d);
+            item.setPostedDate(new SpannableString(Constants.CD_DATE_FORMATTER.format(d)));
 
             messageListItems.add(item);
         }
@@ -129,6 +129,10 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         return messageListItems;
     }
 
+    /**
+     * Clears the highlight (from the spannable strings) from the searchable fields of the
+     * MessageListItem objects.
+     */
     public List<MessageListItem> clearSearchResults(final List<MessageListItem> items) {
 
         //clear matches from past searches.
@@ -136,6 +140,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             item.setMatchesSearch(false);
             item.setContent(new SpannableString(item.getContent()));
             item.setUserName(new SpannableString(item.getUserName()));
+            item.setPostedDate(new SpannableString(item.getPostedDate()));
         }
 
         return items;
@@ -254,12 +259,22 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                 for (final MessageListItem item : items) {
                     if (item.getPostedDate() != null) {
                         if (isBefore) {
-                            if (item.getPostedDate().before(queryDate)) {
-                                item.setMatchesSearch(true);
+                            try {
+                                if (Constants.CD_DATE_FORMATTER.parse(item.getPostedDate()).before(queryDate)) {
+                                    item.setMatchesSearch(true);
+                                    item.setPostedDate(getSpannableString(item.getPostedDate(), item.getPostedDate()));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         } else {
-                            if (item.getPostedDate().after(queryDate)) {
-                                item.setMatchesSearch(true);
+                            try {
+                                if (Constants.CD_DATE_FORMATTER.parse(item.getPostedDate()).after(queryDate)) {
+                                    item.setMatchesSearch(true);
+                                    item.setPostedDate(getSpannableString(item.getPostedDate(), item.getPostedDate()));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         }
                     }

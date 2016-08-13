@@ -51,7 +51,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         holder.mCard.setFromSelf(messageListItem.isFromSelf());
         holder.mCard.setAuthorName(messageListItem.getUserNameSpannableString());
         holder.mCard.setAvatarImage(messageListItem.getUserAvatar());
-        holder.mCard.setDate(Constants.CD_DATE_FORMATTER.format(messageListItem.getPostedDate()));
+        holder.mCard.setDate(messageListItem.getPostedDateSpannableString());
 
     }
 
