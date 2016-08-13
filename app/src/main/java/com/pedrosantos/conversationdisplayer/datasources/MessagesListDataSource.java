@@ -59,7 +59,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             mAfterRegex = mAfter + TAG_SEPARATOR + REGEX_YYYY_MM_DD;
 
             mFrom = mUICallback.getTranslatedString(R.string.from);
-            mFromRegex = mFrom + TAG_SEPARATOR + REGEX_YYYY_MM_DD;
+            mFromRegex = mFrom + TAG_SEPARATOR + REGEX_STRING_WITHOUT_SPACES;
         }
     }
 
@@ -137,12 +137,11 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     public void searchInMessages(List<MessageListItem> items, String query) {
         int beforeOccurrences = countOccurrences(query, mBeforeRegex);
         int afterOccurrences = countOccurrences(query, mAfterRegex);
+        int fromOccurrences = countOccurrences(query, mFromRegex);
 
-        Log.d("MessagesListDataSource", "Occurrences of before: " + beforeOccurrences);
-        Log.d("MessagesListDataSource", "Occurrences of after: " + afterOccurrences);
-
-
-        if (beforeOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG) {
+        if (beforeOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG ||
+                afterOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG ||
+                fromOccurrences > MAX_ALLOWED_OCCURRENCES_PER_TAG) {
             //Return the error to the UI
             return;
         }
@@ -154,6 +153,16 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         result = parseDateAfter(items, query);
         query = result.first;
         Log.d("MessagesListDataSource", "Query after 'after' parse: " + query + " | Matching items: " + result.second.size());
+
+        result = parseFromUser(items, query);
+        query = result.first;
+        Log.d("MessagesListDataSource", "Query after 'from' parse: " + query + " | Matching items: " + result.second.size());
+
+        result = parseFreeText(items, query);
+        query = result.first;
+        Log.d("MessagesListDataSource", "Query after 'free text' parse: " + query + " | Matching items: " + result.second.size());
+
+        Log.d("MessagesListDataSource", "----------");
     }
 
     private Pair<String, List<MessageListItem>> parseDateBefore(List<MessageListItem> items, String query) {
@@ -188,7 +197,6 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             //Try to create a valid date from the extracted date.
             try {
                 queryDate = formatter.parse(dateWithoutTag);
-                Log.d("MessagesListDataSource", "Created date from tag: " + queryDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -196,13 +204,15 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             if (queryDate != null) {
                 //Check matching items, depending on type of verification we're doing here - before or after
                 for (final MessageListItem item : items) {
-                    if (isBefore) {
-                        if (item.getPostedDate().before(queryDate)) {
-                            matchingItems.add(item);
-                        }
-                    } else {
-                        if (item.getPostedDate().after(queryDate)) {
-                            matchingItems.add(item);
+                    if (item.getPostedDate() != null) {
+                        if (isBefore) {
+                            if (item.getPostedDate().before(queryDate)) {
+                                matchingItems.add(item);
+                            }
+                        } else {
+                            if (item.getPostedDate().after(queryDate)) {
+                                matchingItems.add(item);
+                            }
                         }
                     }
 
@@ -217,6 +227,57 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     }
 
     /**
+     * Parses the "from:username" tag - which are the items that are from the user with username (case insensitive) "username".
+     * @param items
+     * @param query
+     * @return
+     */
+    private Pair<String, List<MessageListItem>> parseFromUser(final List<MessageListItem> items, String query) {
+        List<MessageListItem> matchingItems = new ArrayList<>();
+        Pattern pattern = Pattern.compile(mFromRegex);
+        Matcher matcher = pattern.matcher(query);
+        String fromWithTag;
+
+        if (matcher.find()) {
+            fromWithTag = matcher.group();
+
+            String fromWithoutTag = fromWithTag.replace(mFrom + TAG_SEPARATOR, "");
+
+
+            //Check matching items, depending on type of verification we're doing here - username is equal (ignoring case) to the one passed on the query
+            for (final MessageListItem item : items) {
+                if (item.getUserName() != null && item.getUserName().equalsIgnoreCase(fromWithoutTag)) {
+                    matchingItems.add(item);
+                }
+            }
+
+            //update query by removing current tag (after/before) and respective date from it
+            query = query.replace(fromWithTag, "");
+        }
+
+        return new Pair<>(query.trim(), matchingItems);
+    }
+
+    /**
+     * Identifies which of the items have in their content the query passed as parameter (case
+     * insensitive).
+     *
+     * @return a pair with the query (unaltered) in the first parameter and the items that match
+     * that query in the second parameter
+     */
+    private Pair<String, List<MessageListItem>> parseFreeText(final List<MessageListItem> items, final String query) {
+        List<MessageListItem> matchingItems = new ArrayList<>();
+
+        for (final MessageListItem item : items) {
+            if (item.getContent() != null && item.getContent().toLowerCase().contains(query.toLowerCase())) {
+                matchingItems.add(item);
+            }
+        }
+
+        return new Pair<>(query, matchingItems);
+    }
+
+    /**
      * Counts the number of occurrences of regex on query
      */
     private int countOccurrences(final String query, final String regex) {
@@ -228,13 +289,5 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         }
 
         return occurrencesFound;
-    }
-
-    private void parseFromUser(final List<MessageListItem> items, final String query) {
-        //TODO
-    }
-
-    private void parseFreeText(final List<MessageListItem> items, final String query) {
-        //TODO
     }
 }
