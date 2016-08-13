@@ -34,14 +34,18 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
                     tools:background="@mipmap/ic_launcher"/>
 
                 <TextView
                     android:id="@+id/cd_message_card_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:maxLines="2"
                     android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
                     tools:text="Author name"/>
 
             </LinearLayout>
@@ -54,6 +58,18 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 tools:text="Content of the message"/>
+
+            <TextView
+                android:id="@+id/cd_message_card_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:maxLines="2"
+                android:textAlignment="center"
+                android:textColor="@color/secondary_text"
+                android:textSize="12sp"
+                tools:text="2016-05-04 03:02"/>
 
         </RelativeLayout>
 

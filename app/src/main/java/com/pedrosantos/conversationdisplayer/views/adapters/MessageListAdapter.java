@@ -1,7 +1,8 @@
 package com.pedrosantos.conversationdisplayer.views.adapters;
 
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
-import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCard;
+import com.pedrosantos.conversationdisplayer.utils.Constants;
+import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCardView;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -18,9 +19,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
      */
     public static class MessageListVH extends RecyclerView.ViewHolder {
 
-        public CDMessageCard mCard;
+        public CDMessageCardView mCard;
 
-        public MessageListVH(CDMessageCard v) {
+        public MessageListVH(CDMessageCardView v) {
             super(v);
             mCard = v;
         }
@@ -37,7 +38,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public MessageListVH onCreateViewHolder(final ViewGroup parent, final int viewType) {
 
         // create a new view
-        return new MessageListVH(new CDMessageCard(parent.getContext()));
+        return new MessageListVH(new CDMessageCardView(parent.getContext()));
     }
 
     @Override
@@ -48,6 +49,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         holder.mCard.setFromSelf(messageListItem.isFromSelf());
         holder.mCard.setAuthorName(messageListItem.getUserName());
         holder.mCard.setAvatarImage(messageListItem.getUserAvatar());
+        holder.mCard.setDate(Constants.CD_DATE_FORMATTER.format(messageListItem.getPostedDate()));
     }
 
     @Override

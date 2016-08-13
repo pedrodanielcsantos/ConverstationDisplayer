@@ -17,7 +17,7 @@ import android.widget.TextView;
 /**
  * Custom view to visually represent and handle a message item.
  */
-public class CDMessageCard extends LinearLayout {
+public class CDMessageCardView extends LinearLayout {
 
     private static final int AVATAR_WIDTH = 80;
     private TextView mContentText;
@@ -25,18 +25,19 @@ public class CDMessageCard extends LinearLayout {
     private TextView mAuthorName;
     private LinearLayout mAuthorInfoContainer;
     private LinearLayout mOuterContainer;
+    private TextView mDate;
 
-    public CDMessageCard(final Context context) {
+    public CDMessageCardView(final Context context) {
         super(context);
         init(context);
     }
 
-    public CDMessageCard(final Context context, final AttributeSet attrs) {
+    public CDMessageCardView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CDMessageCard(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+    public CDMessageCardView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -44,14 +45,14 @@ public class CDMessageCard extends LinearLayout {
     /**
      * Sets the message content view.
      */
-    public void setContentText(String contentText) {
+    public void setContentText(final String contentText) {
         mContentText.setText(contentText);
     }
 
     /**
      * Sets the author's name label.
      */
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(final String authorName) {
         mAuthorName.setText(authorName);
     }
 
@@ -60,7 +61,7 @@ public class CDMessageCard extends LinearLayout {
      *
      * @param imageUrl url of the user's avatar.
      */
-    public void setAvatarImage(String imageUrl) {
+    public void setAvatarImage(final String imageUrl) {
         //Load with glide
         Glide.with(getContext())
                 .load(imageUrl)
@@ -69,6 +70,10 @@ public class CDMessageCard extends LinearLayout {
                 .crossFade()
                 .animate(android.R.anim.fade_in)
                 .into(mAvatarImageView);
+    }
+
+    public void setDate(final String date) {
+        mDate.setText(date);
     }
 
     /**
@@ -87,13 +92,25 @@ public class CDMessageCard extends LinearLayout {
         //Author Container - avatar and image - layout parameters.
         RelativeLayout.LayoutParams authorInfoContainerLayoutParams = new RelativeLayout.LayoutParams(dpToPx(AVATAR_WIDTH), ViewGroup.LayoutParams.WRAP_CONTENT);
 
+        //Date layout params
+        RelativeLayout.LayoutParams dateLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
         if (isFromSelf) {
+            mDate.setGravity(Gravity.LEFT | Gravity.BOTTOM);
+
+            dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
             globalLayoutParams.gravity = Gravity.RIGHT;
             mOuterContainer.setGravity(Gravity.RIGHT);
             mContentText.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
             authorInfoContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             contentLayoutParams.addRule(RelativeLayout.LEFT_OF, R.id.cd_message_card_author_info_container);
         } else {
+            mDate.setGravity(Gravity.RIGHT | Gravity.BOTTOM);
+
+            dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
             globalLayoutParams.gravity = Gravity.LEFT;
             mOuterContainer.setGravity(Gravity.LEFT);
             mContentText.setTextAlignment(TEXT_ALIGNMENT_VIEW_START);
@@ -101,19 +118,23 @@ public class CDMessageCard extends LinearLayout {
             contentLayoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.cd_message_card_author_info_container);
         }
 
+        dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        dateLayoutParams.addRule(RelativeLayout.BELOW, R.id.cd_message_card_content);
+
         //General rule, independent of being from self or not
         contentLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
         setLayoutParams(globalLayoutParams);
         mContentText.setLayoutParams(contentLayoutParams);
         mAuthorInfoContainer.setLayoutParams(authorInfoContainerLayoutParams);
+        mDate.setLayoutParams(dateLayoutParams);
 
     }
 
     /**
      * Auxiliary method to convert dp to pixels, based on the screen density.
      */
-    private int dpToPx(int dp) {
+    private int dpToPx(final int dp) {
         final DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         return (int) ((dp * displayMetrics.density) + 0.5);
     }
@@ -123,6 +144,7 @@ public class CDMessageCard extends LinearLayout {
 
         mContentText = (TextView) findViewById(R.id.cd_message_card_content);
         mAuthorName = (TextView) findViewById(R.id.cd_message_card_author);
+        mDate = (TextView) findViewById(R.id.cd_message_card_date);
         mAvatarImageView = (ImageView) findViewById(R.id.cd_message_card_avatar);
         mAuthorInfoContainer = (LinearLayout) findViewById(R.id.cd_message_card_author_info_container);
         mOuterContainer = (LinearLayout) findViewById(R.id.cd_message_card_main_container);
