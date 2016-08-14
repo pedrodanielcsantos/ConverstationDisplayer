@@ -9,6 +9,7 @@ import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
 import com.pedrosantos.conversationdisplayer.promises.CDPromise;
 import com.pedrosantos.conversationdisplayer.promises.DataSetPromises;
 import com.pedrosantos.conversationdisplayer.utils.Constants;
+import com.pedrosantos.conversationdisplayer.utils.comparators.MessageDateComparator;
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesListUICallback;
 
 import org.jdeferred.DoneCallback;
@@ -24,6 +25,7 @@ import android.util.Pair;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -76,16 +78,19 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                 .done(new DoneCallback<CDDataSet>() {
                     @Override
                     public void onDone(final CDDataSet result) {
+                        //Make message list sorted by date (ascending)
+                        Collections.sort(result.getMessageList(), new MessageDateComparator());
+
                         if (mUICallback != null) {
                             mUICallback.onDataSetLoaded(result);
                         }
-                        //save result to database
+                        //TODO save result to database
                     }
                 })
                 .fail(new FailCallback<CDError>() {
                     @Override
                     public void onFail(final CDError error) {
-                        //fetch results from database
+                        //TODO fetch results from database
                         onNetworkError(error);
                         if (mUICallback != null) {
                             mUICallback.onDataSetLoaded(null);
@@ -119,7 +124,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             item.setUserAvatar(author.getAvatarUrl());
             item.setUserName(new SpannableString(author.getName()));
             item.setMessageId(message.getId());
-
+            
             Date d = new Date(message.getPostedTs() * 1000);
             item.setPostedDate(new SpannableString(Constants.CD_DATE_FORMATTER.format(d)));
 
