@@ -81,7 +81,7 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
                     @Override
                     public boolean onQueryTextChange(final String newText) {
                         //If the user cleared the text,clear the search query.
-                        if (TextUtils.isEmpty(newText)) {
+                        if (TextUtils.isEmpty(newText) && mAdapter != null) {
                             mAdapter.setItems(mDataSource.clearSearchResults(mAdapter.getItems()));
                             mAdapter.notifyDataSetChanged();
                             return true;
