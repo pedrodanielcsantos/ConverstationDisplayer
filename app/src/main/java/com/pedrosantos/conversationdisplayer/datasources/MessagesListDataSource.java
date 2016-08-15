@@ -210,10 +210,6 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         result = parseFreeText(cloneArray(items), query);
         items = combineMatchesSearchItems(items, result.second, isFirstFilter);
 
-        countMatchedItems(items);
-
-        Log.d("MessagesListDataSource", "----------");
-
         return items;
     }
 
@@ -240,18 +236,6 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             newItems.add(new MessageListItem(item));
         }
         return newItems;
-    }
-
-
-    private void countMatchedItems(final List<MessageListItem> items) {
-        int matchCount = 0;
-        for (final MessageListItem item : items) {
-            if (item.isMatchesSearch()) {
-                matchCount++;
-            }
-        }
-
-        Log.d("MessagesListDataSource", "MatchesCount: " + matchCount);
     }
 
     /**
