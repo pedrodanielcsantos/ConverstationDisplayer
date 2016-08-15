@@ -33,6 +33,26 @@ public class MessageListItem {
     @SerializedName("postedDate")
     private SpannableString mPostedDate;
 
+    public MessageListItem() {
+
+    }
+
+    /**
+     * Constructor that creates an object with the same data as the one passed as parameter.
+     * @param messageListItem
+     */
+    public MessageListItem(MessageListItem messageListItem) {
+        mMessageId=messageListItem.getMessageId();
+        mUserId = messageListItem.getUserId();
+        mContent = messageListItem.getContentSpannableString();
+        mIsFromSelf = messageListItem.isFromSelf();
+        mMatchesSearch = messageListItem.isMatchesSearch();
+        mUserAvatar = messageListItem.getUserAvatar();
+        mUserName = messageListItem.getUserNameSpannableString();
+        mPostedDate = messageListItem.getPostedDateSpannableString();
+
+    }
+
     public long getMessageId() {
         return mMessageId;
     }

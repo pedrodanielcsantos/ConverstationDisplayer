@@ -124,7 +124,8 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             item.setUserAvatar(author.getAvatarUrl());
             item.setUserName(new SpannableString(author.getName()));
             item.setMessageId(message.getId());
-            
+            item.setUserId(author.getId());
+
             Date d = new Date(message.getPostedTs() * 1000);
             item.setPostedDate(new SpannableString(Constants.CD_DATE_FORMATTER.format(d)));
 
@@ -141,11 +142,8 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     public List<MessageListItem> clearSearchResults(final List<MessageListItem> items) {
 
         //clear matches from past searches.
-        for (final MessageListItem item : items) {
-            item.setMatchesSearch(false);
-            item.setContent(new SpannableString(item.getContent()));
-            item.setUserName(new SpannableString(item.getUserName()));
-            item.setPostedDate(new SpannableString(item.getPostedDate()));
+        for (int i = 0; i < items.size(); i++) {
+            items.set(i, clearSearchItem(items.get(i)));
         }
 
         return items;
@@ -175,36 +173,44 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
 
         items = clearSearchResults(items);
 
+        boolean isFirstFilter = true;
+
         Pair<String, List<MessageListItem>> result;
+
+        //Applies before filter, if it's present on the query.
         if (beforeOccurrences > 0) {
-            result = parseDateBefore(items, query);
+
+            result = parseDateBefore(cloneArray(items), query);
             query = result.first;
-            items = result.second;
+            items = combineMatchesSearchItems(items, result.second, isFirstFilter);
+
+            isFirstFilter = false;
         }
 
+        //Applies after filter, if it's present on the query.
         if (afterOccurrences > 0) {
-            result = parseDateAfter(items, query);
+            result = parseDateAfter(cloneArray(items), query);
             query = result.first;
-            items = result.second;
+            items = combineMatchesSearchItems(items, result.second, isFirstFilter);
+
+            isFirstFilter = false;
         }
 
+        //Applies from filter, if it's present on the query.
         if (fromOccurrences > 0) {
-            result = parseFromUser(items, query);
+            result = parseFromUser(cloneArray(items), query);
             query = result.first;
-            items = result.second;
+            items = combineMatchesSearchItems(items, result.second, isFirstFilter);
+
+            isFirstFilter = false;
         }
 
-        result = parseFreeText(items, query);
 
-        items = result.second;
-        int matchCount = 0;
-        for (final MessageListItem item : items) {
-            if (item.isMatchesSearch()) {
-                matchCount++;
-            }
-        }
+        //Applies free filter, with the remaining query, after applying all other existent filters.
+        result = parseFreeText(cloneArray(items), query);
+        items = combineMatchesSearchItems(items, result.second, isFirstFilter);
 
-        Log.d("MessagesListDataSource", "MatchesCount: " + matchCount);
+        countMatchedItems(items);
 
         Log.d("MessagesListDataSource", "----------");
 
@@ -224,6 +230,80 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
         return Constants.INVALID;
     }
 
+    /**
+     * Helper method that creates a copy of the array passed as parameter (and its inner objects),
+     * to help avoiding same-reference changes issues.
+     */
+    private List<MessageListItem> cloneArray(final List<MessageListItem> items) {
+        List<MessageListItem> newItems = new ArrayList<>();
+        for (final MessageListItem item : items) {
+            newItems.add(new MessageListItem(item));
+        }
+        return newItems;
+    }
+
+
+    private void countMatchedItems(final List<MessageListItem> items) {
+        int matchCount = 0;
+        for (final MessageListItem item : items) {
+            if (item.isMatchesSearch()) {
+                matchCount++;
+            }
+        }
+
+        Log.d("MessagesListDataSource", "MatchesCount: " + matchCount);
+    }
+
+    /**
+     * Resets a MessageListItem - clears all spannable data and flags it as not matching a search.
+     */
+    private MessageListItem clearSearchItem(final MessageListItem item) {
+        item.setMatchesSearch(false);
+        item.setContent(new SpannableString(item.getContent()));
+        item.setUserName(new SpannableString(item.getUserName()));
+        item.setPostedDate(new SpannableString(item.getPostedDate()));
+
+        return item;
+    }
+
+    /**
+     * Method that makes the intersection of the two arrays passed as parameter, to help the search
+     * process, after a certain filter (before/after/from/free text) was applied. If it's the first
+     * match process, just returns the newly selected items. If not, per each pair of items, checks
+     * if both match the search and, if so, it adds the newlySelectedItem to the array, because it
+     * has the same state as in previouslySelectedItems, with the updates of the applied filter. If
+     * one of them doesn't match the search, the intersection of the filters fails and the item's
+     * state is reset before it's added.
+     *
+     * @param previouslySelectedItems array of items in the state (spannable strings, matches
+     *                                search
+     *                                or not, etc) before applying the filter.
+     * @param newlySelectedItems      array of items in the new state (same as previouslySelectedItems,
+     *                                but with the fields associated to the applied filter
+     *                                updated),
+     *                                after applying the filter.
+     */
+    private List<MessageListItem> combineMatchesSearchItems(final List<MessageListItem> previouslySelectedItems, final List<MessageListItem> newlySelectedItems, final boolean isFirstMatch) {
+        if (isFirstMatch) {
+
+            return newlySelectedItems;
+
+        } else {
+            final List<MessageListItem> matchedItems = new ArrayList<>();
+
+            for (int i = 0; i < previouslySelectedItems.size(); i++) {
+
+                if (previouslySelectedItems.get(i).isMatchesSearch() && newlySelectedItems.get(i).isMatchesSearch()) {
+                    matchedItems.add(newlySelectedItems.get(i));
+                } else {
+                    final MessageListItem item = clearSearchItem(newlySelectedItems.get(i));
+                    matchedItems.add(item);
+                }
+            }
+            return matchedItems;
+        }
+    }
+
     private Pair<String, List<MessageListItem>> parseDateBefore(List<MessageListItem> items, String query) {
         return parseDateTag(items, query, true);
     }
@@ -233,6 +313,8 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     }
 
     /**
+     * Parses the "before/after:date" tag - which are the items that are after/before the date string, using Date's native before/after methods.
+     *
      * @param items    Original item list
      * @param query    Current query, including all search criteria
      * @param isBefore true if we're checking items before the specified date, false if we're
@@ -268,6 +350,8 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                                 if (Constants.CD_DATE_FORMATTER.parse(item.getPostedDate()).before(queryDate)) {
                                     item.setMatchesSearch(true);
                                     item.setPostedDate(getSpannableString(item.getPostedDate(), item.getPostedDate()));
+                                } else {
+                                    item.setMatchesSearch(false);
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -277,6 +361,8 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                                 if (Constants.CD_DATE_FORMATTER.parse(item.getPostedDate()).after(queryDate)) {
                                     item.setMatchesSearch(true);
                                     item.setPostedDate(getSpannableString(item.getPostedDate(), item.getPostedDate()));
+                                } else {
+                                    item.setMatchesSearch(false);
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -314,6 +400,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                     item.setMatchesSearch(true);
                     item.setUserName(getSpannableString(item.getUserName(), item.getUserName()));
                 } else {
+                    item.setMatchesSearch(false);
                     item.setUserName(new SpannableString(item.getUserName()));
                 }
             }
@@ -326,7 +413,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
     }
 
     /**
-     * Identifies which of the items have in their content the query passed as parameter (case
+     * Identifies which of the items have in their content the whole query passed as parameter (case
      * insensitive).
      *
      * @return a pair with the query (unaltered) in the first parameter and the items that match
@@ -339,6 +426,7 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                     item.setMatchesSearch(true);
                     item.setContent(getSpannableString(item.getContent(), query));
                 } else {
+                    item.setMatchesSearch(false);
                     item.setContent(new SpannableString(item.getContent()));
                 }
             }
