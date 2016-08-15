@@ -2,10 +2,12 @@ package com.pedrosantos.conversationdisplayer.models.api;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Model that maps the object Message retrieved from the API.
  */
-public class Message {
+public class Message extends RealmObject {
 
     @SerializedName("id")
     private long mId;

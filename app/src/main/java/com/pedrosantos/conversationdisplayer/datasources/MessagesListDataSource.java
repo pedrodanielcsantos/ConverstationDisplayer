@@ -1,6 +1,7 @@
 package com.pedrosantos.conversationdisplayer.datasources;
 
 import com.pedrosantos.conversationdisplayer.R;
+import com.pedrosantos.conversationdisplayer.localstorage.CDStorageManager;
 import com.pedrosantos.conversationdisplayer.models.api.CDDataSet;
 import com.pedrosantos.conversationdisplayer.models.api.Message;
 import com.pedrosantos.conversationdisplayer.models.api.User;
@@ -19,7 +20,6 @@ import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.util.Pair;
 
 import java.text.ParseException;
@@ -84,16 +84,18 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
                         if (mUICallback != null) {
                             mUICallback.onDataSetLoaded(result);
                         }
-                        //TODO save result to database
+                        //When storing this object to persistence, clear all other records to make sure that it only exists 1 CDDataSet stored at once.
+                        CDStorageManager.getInstance().storeObject(result, true);
                     }
                 })
                 .fail(new FailCallback<CDError>() {
                     @Override
                     public void onFail(final CDError error) {
-                        //TODO fetch results from database
+
                         onNetworkError(error);
                         if (mUICallback != null) {
-                            mUICallback.onDataSetLoaded(null);
+                            //Load data from local storage, if any.
+                            mUICallback.onDataSetLoaded(CDStorageManager.getInstance().getLastStoredObjectFromPersistence(CDDataSet.class));
                         }
                     }
                 });

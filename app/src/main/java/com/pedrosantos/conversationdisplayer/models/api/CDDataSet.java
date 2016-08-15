@@ -2,19 +2,21 @@ package com.pedrosantos.conversationdisplayer.models.api;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
  * Model that maps the API response, containing a list of users and a list of messages.
  */
-public class CDDataSet {
+public class CDDataSet extends RealmObject {
 
     @SerializedName("users")
-    List<User> mUserList = new ArrayList<>();
+    RealmList<User> mUserList = new RealmList<>();
 
     @SerializedName("messages")
-    List<Message> mMessageList = new ArrayList<>();
+    RealmList<Message> mMessageList = new RealmList<>();
 
 
     public List<User> getUserList() {
