@@ -1,11 +1,8 @@
 package com.pedrosantos.conversationdisplayer.views.adapters;
 
-import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.models.app.MessageListItem;
-import com.pedrosantos.conversationdisplayer.utils.Constants;
 import com.pedrosantos.conversationdisplayer.views.customviews.CDMessageCardView;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
