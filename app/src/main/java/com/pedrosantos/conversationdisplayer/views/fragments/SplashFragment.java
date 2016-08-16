@@ -60,7 +60,7 @@ public class SplashFragment extends BaseFragment<SplashDataSource> {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (mDataSource.isUsernameValid(usernameInputField.getText())) {
+                if (usernameInputField.getText() != null && mDataSource.isUsernameValid(usernameInputField.getText().toString())) {
                     if (getActivityCallback() != null) {
                         getActivityCallback().replaceFragment(MessageListFragment.newInstance(usernameInputField.getText().toString()), MessageListFragment.TAG, true);
                     }

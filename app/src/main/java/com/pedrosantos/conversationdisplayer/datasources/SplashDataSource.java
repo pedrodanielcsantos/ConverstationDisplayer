@@ -2,7 +2,6 @@ package com.pedrosantos.conversationdisplayer.datasources;
 
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.BaseUICallback;
 
-import android.text.Editable;
 import android.text.TextUtils;
 
 /**
@@ -10,8 +9,8 @@ import android.text.TextUtils;
  */
 public class SplashDataSource extends BaseDataSource<BaseUICallback> {
 
-    public boolean isUsernameValid(Editable username) {
-        return !TextUtils.isEmpty(username) && !username.toString().contains(" ");
+    public boolean isUsernameValid(String username) {
+        return !TextUtils.isEmpty(username) && !username.contains(" ");
     }
 
 }
