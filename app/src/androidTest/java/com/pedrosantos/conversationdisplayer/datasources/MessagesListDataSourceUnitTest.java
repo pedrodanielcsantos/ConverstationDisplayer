@@ -118,12 +118,15 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
     public void freeTextSearch() {
         List<MessageListItem> matchingItems;
 
+        //Search keyword - case insensitive
         matchingItems = mDataSource.searchInMessages(mItems, "dummy");
         assertEquals("Result should have all items, as they all contain the passed expression and search is case insensitive", 4, countMatchingSearchItems(matchingItems));
 
-        matchingItems = mDataSource.searchInMessages(mItems, "dummy MESSAGE");
+        //Search expression - case insensitive
+        matchingItems = mDataSource.searchInMessages(mItems, "duMmy MESSAGE");
         assertEquals("Result should have all items, as they all contain the passed expression and search is case insensitive", 4, countMatchingSearchItems(matchingItems));
 
+        //Search invalid keyword
         matchingItems = mDataSource.searchInMessages(mItems, "dummi");
         assertEquals("Result should have 0 results, as no item contains this whole expression", 0, countMatchingSearchItems(matchingItems));
     }
@@ -135,9 +138,12 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
     @Test
     public void multipleTagsSearchTest() {
         List<MessageListItem> matchingItems;
+
+        //Valid date range and with content
         matchingItems = mDataSource.searchInMessages(mItems, "before:2016-7-23 after:2016-7-21");
         assertEquals("There should be 2 items within this time range (before:2016-7-23 after:2016-7-21)", 2, countMatchingSearchItems(matchingItems));
 
+        //Invalid date range
         matchingItems = mDataSource.searchInMessages(mItems, "after:2016-7-23 before:2016-7-21");
         assertEquals("There should be no items items within this time range as it's invalid for an intersection", 0, countMatchingSearchItems(matchingItems));
 
@@ -145,18 +151,27 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
         matchingItems = mDataSource.searchInMessages(mItems, "after:2016-7-22 before:2016-7-23");
         assertEquals("There should be no items items within this time range, as their intersection is empty.", 0, countMatchingSearchItems(matchingItems));
 
+        //Testing intersection with tag "from" and keyword "04" - valid content
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs 04");
         assertEquals("There should be 1 message from stevejobs that contains the expresion '04'", 1, countMatchingSearchItems(matchingItems));
 
+        //Testing intersection with tag "from" and keyword "05" - valid content
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs 05");
         assertEquals("There should be no messages, as messages from stevejobs don't contain the expression '05'", 0, countMatchingSearchItems(matchingItems));
 
+        //Testing invalid search - same tag used multiple times.
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs from:billgates");
         assertNull("Result should be null, as there where multiple valid occurrences of from", matchingItems);
 
+        //Testing valid search - from tag and expression "from billgates", which is not recognized as a tag (missing ":") - no content
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs from billgates");
         assertNotNull("Result should not be null, as there where not multiple valid occurrences of from", matchingItems);
         assertEquals("There should be no results for this query, despite being valid", 0, countMatchingSearchItems(matchingItems));
+
+        //Testing all tags applied for valid search
+        matchingItems = mDataSource.searchInMessages(mItems, "after:2016-07-21 before:2016-7-23 from:stevejobs on 22/7");
+        assertNotNull("Result should not be null, as there where not multiple valid occurrences of from", matchingItems);
+        assertEquals("There should be 1 message between 21 and 23 of July, from stevejobs that contains the expresion 'on 22/7'", 1, countMatchingSearchItems(matchingItems));
     }
 
     /**
