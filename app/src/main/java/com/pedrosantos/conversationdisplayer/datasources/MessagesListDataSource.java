@@ -23,7 +23,6 @@ import android.text.style.StyleSpan;
 import android.util.Pair;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -40,7 +39,6 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
 
     //Static regexes
     private static final String REGEX_YYYY_MM_DD = "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}";//yyyy-mm-dd
-    private static final String YYYY_MM_DD_FORMAT = "yyyy-MM-dd";
     private static final String REGEX_STRING_WITHOUT_SPACES = "([^\\s]+)";
     //Standard constants
     private static final int MAX_ALLOWED_OCCURRENCES_PER_TAG = 1;
@@ -317,12 +315,19 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             dateWithTag = matcher.group();
             String dateWithoutTag = dateWithTag.replace((isBefore ? mBefore : mAfter) + TAG_SEPARATOR, "");
 
-            SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_FORMAT);
             Date queryDate = null;
+
+            //Adding hours to make search query more specific and coherent.
+            //This way after/before are excluding the day passed as parameter.
+            if (isBefore) {
+                dateWithoutTag += " 00:00";
+            } else {
+                dateWithoutTag += " 23:59";
+            }
 
             //Try to create a valid date from the extracted date.
             try {
-                queryDate = formatter.parse(dateWithoutTag);
+                queryDate = Constants.CD_DATE_FORMATTER.parse(dateWithoutTag);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
