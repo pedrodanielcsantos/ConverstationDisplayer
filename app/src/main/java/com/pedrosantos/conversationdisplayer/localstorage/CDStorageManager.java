@@ -48,6 +48,9 @@ public class CDStorageManager {
         mRealm.commitTransaction();
     }
 
+    /**
+     * Returns the last stored object of type (table) T. If there's none, returns null.
+     */
     public <T extends RealmObject> T getLastStoredObjectFromPersistence(Class<T> classToRetrieve) {
         final RealmResults<T> results = mRealm.where(classToRetrieve).findAll();
         if (results != null && results.size() > 0) {
