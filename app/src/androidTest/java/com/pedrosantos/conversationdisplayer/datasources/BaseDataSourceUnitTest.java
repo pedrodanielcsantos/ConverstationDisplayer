@@ -2,6 +2,7 @@ package com.pedrosantos.conversationdisplayer.datasources;
 
 import com.google.gson.Gson;
 
+import com.pedrosantos.conversationdisplayer.R;
 import com.pedrosantos.conversationdisplayer.models.app.CDError;
 import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.BaseUICallback;
 
@@ -39,10 +40,21 @@ public abstract class BaseDataSourceUnitTest<DS extends BaseDataSource> implemen
         //TODO
     }
 
+    /**
+     * Dummy get string. Returning defaults in english.
+     */
     @Override
     public String getTranslatedString(final int stringResourceId) {
-        //TODO
-        return null;
+        switch (stringResourceId) {
+            case R.string.before:
+                return "before";
+            case R.string.after:
+                return "after";
+            case R.string.from:
+                return "from";
+            default:
+                return null;
+        }
     }
 
     public <T> T getConvertedObjectFromString(Class<T> classToRetrieve, String jsonObject) {

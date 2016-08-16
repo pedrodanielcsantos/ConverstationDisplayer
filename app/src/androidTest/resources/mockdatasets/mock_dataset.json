@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Gonçalo",
+      "avatar_url": "https://d10oy3rrrp8hu2.cloudfront.net/0135067f22cd3ac38d15d5fa8293db57_s195.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Katarina",
+      "avatar_url": "https://d10oy3rrrp8hu2.cloudfront.net/be790245ea68e86fa6c8013e0ffa7059_s195.jpg"
+    }
+  ],
+  "messages": [
+    {
+      "user_id": 2,
+      "id": 1,
+      "posted_ts": 1469186324,
+      "content": "Dummy message from Katarina on 22/7/2016"
+    },
+    {
+      "user_id": 1,
+      "id": 2,
+      "posted_ts": 1469186334,
+      "content": "Dummy message from Gonçalo on 22/7/2016"
+    },
+    {
+      "user_id": 1,
+      "id": 7,
+      "posted_ts": 1467645524,
+      "content": "Dummy message from Gonçalo on 04/7/2016"
+    },
+    {
+      "user_id": 2,
+      "id": 22,
+      "posted_ts": 1470353783,
+      "content": "Dummy message from Katarina on 4/8/2016"
+    }
+  ]
+}
