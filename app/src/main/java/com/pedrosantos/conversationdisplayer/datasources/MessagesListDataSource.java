@@ -36,13 +36,14 @@ import java.util.regex.Pattern;
  */
 public class MessagesListDataSource extends BaseDataSource<MessagesListUICallback> {
 
+    public static final String DAY_BEGINING = " 00:00";
+    public static final String DAY_END = " 23:59";
     //Static regexes
     private static final String REGEX_YYYY_MM_DD = "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}";//yyyy-mm-dd
     private static final String REGEX_STRING_WITHOUT_SPACES = "([^\\s]+)";
     //Standard constants
     private static final int MAX_ALLOWED_OCCURRENCES_PER_TAG = 1;
     private static final String TAG_SEPARATOR = ":";
-
     //dynamic regexes and strings
     private String mBeforeRegex;
     private String mAfterRegex;
@@ -317,9 +318,9 @@ public class MessagesListDataSource extends BaseDataSource<MessagesListUICallbac
             //Adding hours to make search query more specific and coherent.
             //This way after/before are excluding the day passed as parameter.
             if (isBefore) {
-                dateWithoutTag += " 00:00";
+                dateWithoutTag += DAY_BEGINING;
             } else {
-                dateWithoutTag += " 23:59";
+                dateWithoutTag += DAY_END;
             }
 
             //Try to create a valid date from the extracted date.
