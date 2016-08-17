@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/cd_message_card_main_container"
               xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:card_view="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_inner_margin"
+              android:layout_marginBottom="4dp"
               android:orientation="horizontal"
               android:weightSum="1">
 
@@ -14,6 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.85"
+        app:cardUseCompatPadding="true"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="4dp"
         card_view:contentPadding="@dimen/default_inner_margin">
