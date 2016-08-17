@@ -29,8 +29,7 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
 
     /**
      * For the purpose of this test, we'll always assume that the user that's consulting the info
-     * is
-     * "billgates".
+     * is "billgates".
      */
     @Before
     public void setup() {
@@ -61,7 +60,7 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
         //mark one item as matching search
         mItems.get(indexOfFirstMatch).setMatchesSearch(true);
 
-        assertEquals("No item is selected, so index should be Constants.INVALID", indexOfFirstMatch, mDataSource.indexOfFirstMatchedSearch(mItems));
+        assertEquals("Returned index does not match the expected one", indexOfFirstMatch, mDataSource.indexOfFirstMatchedSearch(mItems));
     }
 
     @Test
@@ -126,9 +125,13 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
         matchingItems = mDataSource.searchInMessages(mItems, "duMmy MESSAGE");
         assertEquals("Result should have all items, as they all contain the passed expression and search is case insensitive", 4, countMatchingSearchItems(matchingItems));
 
+        //Search inexistent expresion
+        matchingItems = mDataSource.searchInMessages(mItems, "dummy expression");
+        assertEquals("Result should have 0 results, as no item contains this expression", 0, countMatchingSearchItems(matchingItems));
+
         //Search invalid keyword
         matchingItems = mDataSource.searchInMessages(mItems, "dummi");
-        assertEquals("Result should have 0 results, as no item contains this whole expression", 0, countMatchingSearchItems(matchingItems));
+        assertEquals("Result should have 0 results, as no item contains this expression", 0, countMatchingSearchItems(matchingItems));
     }
 
     /**
@@ -157,7 +160,7 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
 
         //Testing intersection with tag "from" and keyword "05" - valid content
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs 05");
-        assertEquals("There should be no messages, as messages from stevejobs don't contain the expression '05'", 0, countMatchingSearchItems(matchingItems));
+        assertEquals("There should be no results, as messages from stevejobs don't contain the expression '05'", 0, countMatchingSearchItems(matchingItems));
 
         //Testing invalid search - same tag used multiple times.
         matchingItems = mDataSource.searchInMessages(mItems, "from:stevejobs from:billgates");

@@ -23,6 +23,9 @@ public abstract class BaseDataSourceUnitTest<DS extends BaseDataSource> implemen
     protected DS mDataSource;
     private Gson mGsonConverter;
 
+    /**
+     * Constructor. Tries to intialize the datasource and attach the callback to it.
+     */
     public BaseDataSourceUnitTest() {
         final ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
         final Class<DS> dataSourceType = (Class<DS>) superClass.getActualTypeArguments()[0];
@@ -37,7 +40,7 @@ public abstract class BaseDataSourceUnitTest<DS extends BaseDataSource> implemen
 
     @Override
     public void onNetworkError(final CDError error) {
-        //TODO
+        //Not used at the moment.
     }
 
     /**
@@ -57,10 +60,17 @@ public abstract class BaseDataSourceUnitTest<DS extends BaseDataSource> implemen
         }
     }
 
+    /**
+     * Converts a JSON string to an object of type T.
+     */
     public <T> T getConvertedObjectFromString(Class<T> classToRetrieve, String jsonObject) {
         return mGsonConverter.fromJson(jsonObject, classToRetrieve);
     }
 
+    /**
+     * Returns a string with the content of the file with fileName placed inside folder with name
+     * folder, the instrumentation test resources package.
+     */
     protected String getFileFromAssets(final String folder, final String fileName) {
         try {
             String file = folder + "/" + fileName;
