@@ -14,25 +14,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:elevation="@dimen/cardview_default_elevation"
             app:theme="@style/CDMessageListBarTheme"
             app:title="@string/app_name"
-            app:titleTextColor="@android:color/white">
+            app:titleTextColor="@android:color/white"/>
 
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/messages_list_swipe_to_refresh"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/default_outer_margin">
+            android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/messages_list_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/messages_list_swipe_to_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/default_outer_margin"
+                android:paddingRight="@dimen/default_outer_margin">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/messages_list_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_shadow_height"
+                android:background="@drawable/toolbar_shadow"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
