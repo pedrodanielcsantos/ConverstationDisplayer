@@ -10,7 +10,6 @@ import com.pedrosantos.conversationdisplayer.views.fragments.callbacks.MessagesL
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,10 +69,10 @@ public class MessageListFragment extends BaseFragment<MessagesListDataSource> im
                             if (indexOfFirstMatch != Constants.INVALID) {
                                 mMessagesRecyclerView.smoothScrollToPosition(indexOfFirstMatch);
                             } else {
-                                Snackbar.make(getView(), getString(R.string.no_results_found), Snackbar.LENGTH_SHORT).show();
+                                showSnackbar(getString(R.string.no_results_found));
                             }
                         } else {
-                            Snackbar.make(getView(), getString(R.string.invalid_search_query), Snackbar.LENGTH_SHORT).show();
+                            showSnackbar(getString(R.string.invalid_search_query));
                         }
                         return true;
                     }

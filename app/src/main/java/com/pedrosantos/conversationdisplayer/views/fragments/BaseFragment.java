@@ -75,4 +75,11 @@ public abstract class BaseFragment<DS extends BaseDataSource> extends Fragment i
     public String getTranslatedString(final int stringResourceId) {
         return getString(stringResourceId);
     }
+
+    protected void showSnackbar(final String message){
+
+        if(getView() != null) {
+            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
 }

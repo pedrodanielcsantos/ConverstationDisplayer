@@ -20,6 +20,8 @@ import static junit.framework.Assert.assertNull;
 public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<MessagesListDataSource> implements MessagesListUICallback {
 
     private static final String MOCK_DATASETS_FOLDER = "mockdatasets";
+    public static final String DEFAULT_SELF_USERNAME = "billgates";
+    public static final String MOCK_DATASET_MAIN = "mock_dataset.json";
     private List<MessageListItem> mItems;
 
     @Override
@@ -33,8 +35,8 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
      */
     @Before
     public void setup() {
-        final CDDataSet dataSet = getConvertedObjectFromString(CDDataSet.class, getFileFromAssets(MOCK_DATASETS_FOLDER, "mock_dataset.json"));
-        mItems = mDataSource.createMessageListItems(dataSet, "billgates");
+        final CDDataSet dataSet = getConvertedObjectFromString(CDDataSet.class, getFileFromAssets(MOCK_DATASETS_FOLDER, MOCK_DATASET_MAIN));
+        mItems = mDataSource.createMessageListItems(dataSet, DEFAULT_SELF_USERNAME);
     }
 
     @Test
@@ -73,7 +75,7 @@ public class MessagesListDataSourceUnitTest extends BaseDataSourceUnitTest<Messa
         assertEquals("There should be only 1 message before 2016-07-05", 1, countMatchingSearchItems(matchingItems));
 
         matchingItems = mDataSource.searchInMessages(mItems, "before:2016-08-05");
-        assertEquals("All messages are from before 2016-8-5", 4, countMatchingSearchItems(matchingItems));
+        assertEquals("All messages should be from before 2016-8-5", 4, countMatchingSearchItems(matchingItems));
 
         //Edge case: searching for items before a date where items exist. As search is exclusivé, should return no items.
         matchingItems = mDataSource.searchInMessages(mItems, "before:2016-7-4");
