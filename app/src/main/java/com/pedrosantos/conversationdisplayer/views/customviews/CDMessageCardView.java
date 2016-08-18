@@ -96,14 +96,8 @@ public class CDMessageCardView extends LinearLayout {
         //Author Container - avatar and image - layout parameters.
         RelativeLayout.LayoutParams authorInfoContainerLayoutParams = new RelativeLayout.LayoutParams(dpToPx(AVATAR_WIDTH), ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        //Date layout params
-        RelativeLayout.LayoutParams dateLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
         if (isFromSelf) {
             mDate.setGravity(Gravity.LEFT | Gravity.BOTTOM);
-
-            dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
             globalLayoutParams.gravity = Gravity.RIGHT;
             mOuterContainer.setGravity(Gravity.RIGHT);
@@ -113,8 +107,6 @@ public class CDMessageCardView extends LinearLayout {
         } else {
             mDate.setGravity(Gravity.RIGHT | Gravity.BOTTOM);
 
-            dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
             globalLayoutParams.gravity = Gravity.LEFT;
             mOuterContainer.setGravity(Gravity.LEFT);
             mContentText.setTextAlignment(TEXT_ALIGNMENT_VIEW_START);
@@ -122,17 +114,12 @@ public class CDMessageCardView extends LinearLayout {
             contentLayoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.cd_message_card_author_info_container);
         }
 
-        dateLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        dateLayoutParams.addRule(RelativeLayout.BELOW, R.id.cd_message_card_content);
-
         //General rule, independent of being from self or not
         contentLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
         setLayoutParams(globalLayoutParams);
         mContentText.setLayoutParams(contentLayoutParams);
         mAuthorInfoContainer.setLayoutParams(authorInfoContainerLayoutParams);
-        mDate.setLayoutParams(dateLayoutParams);
-
     }
 
     /**
