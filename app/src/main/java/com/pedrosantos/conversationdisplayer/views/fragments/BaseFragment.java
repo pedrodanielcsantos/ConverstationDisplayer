@@ -64,9 +64,9 @@ public abstract class BaseFragment<DS extends BaseDataSource> extends Fragment i
     public void onNetworkError(final CDError error) {
         if (error != null && getView() != null) {
             if (error.getCode() == Constants.NETWORK_ERROR) {
-                Snackbar.make(getView(), getString(R.string.check_your_internet_connection), Snackbar.LENGTH_LONG).show();
+                showSnackbar(getString(R.string.check_your_internet_connection));
             } else {
-                Snackbar.make(getView(), getString(R.string.we_had_a_problem_please_try_again, error.getCode(), error.getMessage()), Snackbar.LENGTH_LONG).show();
+                showSnackbar(getString(R.string.we_had_a_problem_please_try_again, error.getCode(), error.getMessage()));
             }
         }
     }

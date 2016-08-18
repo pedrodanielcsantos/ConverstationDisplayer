@@ -10,7 +10,7 @@ import retrofit2.http.GET;
  */
 public interface DataSetAPI {
 
-    @GET("1585962/api.json")
-    Call<CDDataSet> getData();
+    @GET("api.json")
+    Call<CDDataSet> getDataSet();
 
 }

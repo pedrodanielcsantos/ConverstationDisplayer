@@ -14,15 +14,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class CDNetworkClient {
 
-    private static final String API_BASE_URL = "https://dl.dropboxusercontent.com/u/";
+    private static final String API_BASE_URL = "https://dl.dropboxusercontent.com/u/1585962/";
     private static CDNetworkClient mClient;
     private DataSetAPI mConversationAPI;
 
     private CDNetworkClient() {
 
-        // Initialize auxiliary objects to use on the retrofit object
-
-        //Logging interceptor
+        //Logging interceptor and okHttpClient
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();

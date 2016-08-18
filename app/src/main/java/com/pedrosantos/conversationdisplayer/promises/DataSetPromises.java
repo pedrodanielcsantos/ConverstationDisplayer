@@ -19,7 +19,7 @@ public class DataSetPromises extends BasePromise {
     public static Promise<CDDataSet, CDError, Void> getDataSet() {
         final DeferredObject<CDDataSet, CDError, Void> deferredObject = new DeferredObject<>();
 
-        CDNetworkClient.getInstance().getConversationAPI().getData().enqueue(new Callback<CDDataSet>() {
+        CDNetworkClient.getInstance().getConversationAPI().getDataSet().enqueue(new Callback<CDDataSet>() {
             @Override
             public void onResponse(final Call<CDDataSet> call, final Response<CDDataSet> response) {
                 handleOnResponse(deferredObject, response);
